@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import React, { useState } from "react";
+import TaskInput from "./Component/TaskInput";
+import TaskList from "./Component/Tasklist";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tasks, settask] = useState([])
 
+  const addtask =(task) =>{
+    const newTask = {
+      id: Date.now(),
+      text: task,
+      completed: false
+    }
+    settask([...tasks, newTask])
+  }
+
+  const handleDelete=(id)=>{
+    const updatedTasks = tasks.filter(task => task.id !== id)
+    settask(updatedTasks)
+  }
+
+  const toggleComplete = (id) => {
+    const updatedTasks = tasks.map(task =>
+      task.id === id ? { ...task, completed: !task.completed } : task
+    );
+    settask(updatedTasks);
+  };
+   
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="w-screen h-screen bg-gradient-to-r from-orange-500 to-indigo-600  flex items-center justify-center ">
+        <div className=" w-[40%] h-[50%] justify-center flex overflow-auto ">
+          <div >
+            <h1 className="text-2xl font-bold italic">📝 Task Tracker</h1>
+            <TaskInput onAdd={addtask}/>
+            <TaskList tasks={tasks} ondelete={handleDelete} onToggle={toggleComplete} />
+          </div>
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
